@@ -1,0 +1,2 @@
+----------------------------------------------------
+{"departmentName":"Boyaca","departmentCities":[{"cityName":"Tunja","cityCode":"Col1-1","isDepartmentCapital":true,"isCountryCapital":false}],"departmentCode":"Col1"}

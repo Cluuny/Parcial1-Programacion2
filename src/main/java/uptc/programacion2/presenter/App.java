@@ -1,10 +1,9 @@
 package uptc.programacion2.presenter;
 
-import uptc.programacion2.helpers.Context;
 import uptc.programacion2.helpers.FileAPI;
+import uptc.programacion2.models.Context;
 import uptc.programacion2.models.Country;
 import uptc.programacion2.models.World;
-import uptc.programacion2.view.Menu;
 import uptc.programacion2.view.View;
 
 import java.io.File;
@@ -14,24 +13,19 @@ import java.nio.file.Paths;
 public class App {
 
     private final View view;
-    private final Menu menu;
     private final Context context;
     private final FileAPI fileAPI;
 
     public App() {
         view = new View();
-        menu = new Menu();
         context = new Context();
         fileAPI = new FileAPI();
     }
 
     public static void main(String[] args) {
-        String workingDirectory = System.getProperty("user.dir");
-        Path worldJSON = Paths.get(workingDirectory + File.separator + "src/main/java/uptc/programacion2/data/World.json");
-        Path citiesTXT = Paths.get(workingDirectory + File.separator + "src/main/java/uptc/programacion2/data/Cities.txt");
-        System.setProperty("WORLD_PATH", String.valueOf(worldJSON));
-        System.setProperty("CITIES_PATH", String.valueOf(citiesTXT));
-        new App().displayMainMenu();
+        App app = new App();
+        app.loadENV();
+        app.displayMainMenu();
     }
 
     public void displayMainMenu() {
@@ -40,13 +34,12 @@ public class App {
         int countryIndex;
         try {
             do {
-                view.showMessage("Bienvenido!\n");
                 context.setContextWorld(fileAPI.initWorld(System.getProperty("WORLD_PATH")));
                 World contextWorld = context.getContextWorld();
                 if (contextWorld.getCountries().isEmpty()) {
                     view.showMessage("ATENCIÓN: No se encontráron paises registrados\nEs necesario crear un pais para continuar.\n");
                 }
-                int opt = menu.mainMenu();
+                int opt = view.showMenu(System.getProperty("MAIN_MENU_PATH"));
                 switch (opt) {
                     case 1 -> {
                         String countryName = view.readText("Ingresa el nombre del pais que quieres crear: ");
@@ -67,7 +60,7 @@ public class App {
                     }
                     case 3 -> {
                         countriesData = contextWorld.listCountries();
-                        view.showMessage("Selecciona alguno de los siguiente paises para continuar: \n");
+                        view.showMessage("Selecciona alguno de los siguiente paises para continuar:");
                         if (countriesData.isEmpty()) {
                             view.showMessage("No se encontraron paises registrados!\n");
                             break;
@@ -78,7 +71,7 @@ public class App {
                     }
                     case 4 -> {
                         countriesData = contextWorld.listCountries();
-                        view.showMessage("Selecciona el pais que deseas eliminar: \n");
+                        view.showMessage("Selecciona el pais que deseas eliminar:");
                         if (countriesData.isEmpty()) {
                             view.showMessage("No se encontraron paises registrados!\n");
                             break;
@@ -88,7 +81,7 @@ public class App {
                         fileAPI.writeFile(contextWorld);
                         view.showMessage(deletedCountry.getCountryName() + " ha sido correctamente eliminado!");
                     }
-                    case 5 -> {
+                    case 0 -> {
                         fileAPI.writeFile(contextWorld);
                         view.showMessage("Saliendo...");
                         exit = true;
@@ -101,5 +94,19 @@ public class App {
             view.showMessage("- Recuerde ingresar caracteres numericos\n- Recuerde ingresar unicamente opciones validas");
             this.displayMainMenu();
         }
+    }
+
+    public void loadENV(){
+        String workingDirectory = System.getProperty("user.dir");
+        Path worldJSON = Paths.get(workingDirectory + File.separator + "src/main/java/uptc/programacion2/data/World.json");
+        Path citiesTXT = Paths.get(workingDirectory + File.separator + "src/main/java/uptc/programacion2/data/Cities.txt");
+        Path mainMenuApp = Paths.get(workingDirectory + File.separator + "src/main/java/uptc/programacion2/data/MenuApp.xml");
+        Path departmentsMenuApp = Paths.get(workingDirectory + File.separator + "src/main/java/uptc/programacion2/data/MenuDepartmentsApp.xml");
+        Path citiesMenuApp = Paths.get(workingDirectory + File.separator + "src/main/java/uptc/programacion2/data/MenuCitiesApp.xml");
+        System.setProperty("WORLD_PATH", String.valueOf(worldJSON));
+        System.setProperty("CITIES_PATH", String.valueOf(citiesTXT));
+        System.setProperty("MAIN_MENU_PATH", String.valueOf(mainMenuApp));
+        System.setProperty("DEPARTMENTS_MENU_PATH", String.valueOf(departmentsMenuApp));
+        System.setProperty("CITIES_MENU_PATH", String.valueOf(citiesMenuApp));
     }
 }

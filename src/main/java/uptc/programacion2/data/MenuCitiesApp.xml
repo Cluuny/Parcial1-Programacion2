@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menu>
+    <option id="1">Crear Cuidad</option>
+    <option id="2">Listar Cuidades</option>
+    <option id="3">Eliminar Cuidad</option>
+    <option id="0">Volver</option>
+</menu>

@@ -1,9 +1,4 @@
-package uptc.programacion2.helpers;
-
-import uptc.programacion2.models.City;
-import uptc.programacion2.models.Country;
-import uptc.programacion2.models.Department;
-import uptc.programacion2.models.World;
+package uptc.programacion2.models;
 
 public class Context {
     private World contextWorld;

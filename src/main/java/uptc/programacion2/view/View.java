@@ -1,5 +1,10 @@
 package uptc.programacion2.view;
 
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import uptc.programacion2.helpers.FileAPI;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,18 +19,6 @@ public class View {
     public void showMessage(String message) {
         System.out.println(message);
     }
-
-    public String readAll(String message) throws IOException {
-        this.showMessage(message);
-        String input = "";
-        input = console.readLine().trim();
-        if (!input.isEmpty()) {
-            return input;
-        } else {
-            throw new IOException();
-        }
-    }
-
 
     public boolean readBoolean(String message) throws IOException {
         this.showMessage(message);
@@ -55,5 +48,20 @@ public class View {
         } else {
             throw new IOException();
         }
+    }
+
+    public int showMenu(String path) throws IOException {
+        FileAPI fileAPI = new FileAPI();
+        NodeList mainMenu = fileAPI.readXML(path);
+        StringBuilder builder = new StringBuilder();
+        builder.append("Bienvenido! Porfavor seleccione alguna de las siguientes opciones!:\n");
+        for (int i = 0; i < mainMenu.getLength(); i++) {
+            Node node = mainMenu.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) node;
+                builder.append(element.getAttribute("id")).append(". ").append(element.getTextContent()).append("\n");
+            }
+        }
+        return this.readInt(builder.toString());
     }
 }

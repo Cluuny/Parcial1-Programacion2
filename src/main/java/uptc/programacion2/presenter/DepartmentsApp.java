@@ -1,22 +1,19 @@
 package uptc.programacion2.presenter;
 
-import uptc.programacion2.helpers.Context;
 import uptc.programacion2.helpers.FileAPI;
+import uptc.programacion2.models.Context;
 import uptc.programacion2.models.Country;
 import uptc.programacion2.models.Department;
-import uptc.programacion2.view.Menu;
 import uptc.programacion2.view.View;
 
 public class DepartmentsApp {
     private final Context context;
     private final View view;
-    private final Menu menu;
     private final FileAPI fileAPI;
 
     public DepartmentsApp(Context context) {
         this.context = context;
         this.view = new View();
-        this.menu = new Menu();
         this.fileAPI = new FileAPI();
     }
 
@@ -31,7 +28,7 @@ public class DepartmentsApp {
                 if (contextCountry.getCountryDepartments().isEmpty()) {
                     view.showMessage("ATENCIÓN: No se encontráron departamentos registrados\nEs necesario crear un departamento para continuar.\n");
                 }
-                int opt = menu.departmentsMenu();
+                int opt = view.showMenu(System.getProperty("DEPARTMENTS_MENU_PATH"));
                 switch (opt) {
                     case 1 -> {
                         String departmentName = view.readText("Ingrese el nombre del departamento a crear: \n");
@@ -53,7 +50,7 @@ public class DepartmentsApp {
                     }
                     case 3 -> {
                         departmentsData = contextCountry.listDepartments();
-                        view.showMessage("Selecciona alguno de los siguientes departamentos para continuar: \n");
+                        view.showMessage("Selecciona alguno de los siguientes departamentos para continuar:");
                         if (departmentsData.isEmpty()) {
                             view.showMessage(contextCountry.getCountryName() + " no cuenta con departamentos registrados!\n");
                             break;
@@ -73,7 +70,7 @@ public class DepartmentsApp {
                         fileAPI.writeFile(context.getContextWorld());
                         view.showMessage(deletedDepartment.getDepartmentName() + " fue exitosamente eliminado!\n");
                     }
-                    case 5 -> {
+                    case 0 -> {
                         fileAPI.writeFile(context.getContextWorld());
                         exit = true;
                     }
